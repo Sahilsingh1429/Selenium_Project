@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle, Day, and Time Slot Selection</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            flex-direction: column; /* Align elements in a column */
+        }
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            margin-bottom: 20px; /* Space between toggle and day slots */
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4caf50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+        .slider .toggle-text {
+            position: absolute;
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+        .time-slot {
+            margin-bottom: 20px;
+        }
+        .time-slot label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .time-slot select {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="toggle-switch">
+        <input type="checkbox" id="toggle" onclick="toggleScript()">
+        <label class="slider" for="toggle">
+            <div class="toggle-text">
+                <span id="off-text">OFF</span>
+                <span id="on-text">ON</span>
+            </div>
+        </label>
+    </div>
+
+    <div class="time-slot">
+        <label for="day">Select Day:</label>
+        <select id="day">
+            <!-- <option value="0">Monday</option> -->
+            <option value="on-text">--------</option>
+
+            <option value="1">Tuesday</option>
+            <option value="2">Wednesday</option>
+            <option value="3">Thursday</option>
+           
+
+        </select>
+    </div>
+
+    <div class="time-slot">
+        <label for="time">Select Time Slot:</label>
+        <select id="time">
+            <!-- <option value="7-8">7:00 AM - 8:00 AM</option> -->
+            <option value="on-text">-----------------</option>
+            <option value="13-14">1:00 PM - 2:00 PM</option>
+            <option value="10-11">10:00 AM - 11:00 AM</option>
+            <option value="15-16">3:00 PM - 4:00 PM</option>
+            
+            
+
+
+
+            <!-- <option value="1-2">1:00 AM - 2:00 AM</option> -->
+
+
+        </select>
+        
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <script>
+        function toggleScript() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/toggle", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var toggle = document.getElementById("toggle");
+
+                    if (toggle.checked) {
+                        document.getElementById("on-text").style.display = "block";
+                        document.getElementById("off-text").style.display = "none";
+                    } else {
+                        document.getElementById("on-text").style.display = "none";
+                        document.getElementById("off-text").style.display = "block";
+                    }
+
+                    if (response.message) {
+                        document.getElementById("message").innerText = response.message;
+                    } else {
+                        document.getElementById("message").innerText = "";
+                    }
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <select id="time"> -->
+    <!-- Generating options for all hours of the day -->
+    <!-- <option value="0-1">12:00 AM - 1:00 AM</option>
+    <option value="1-2">1:00 AM - 2:00 AM</option>
+    <option value="2-3">2:00 AM - 3:00 AM</option>
+    <option value="3-4">3:00 AM - 4:00 AM</option>
+    <option value="4-5">4:00 AM - 5:00 AM</option>
+    <option value="5-6">5:00 AM - 6:00 AM</option>
+    <option value="6-7">6:00 AM - 7:00 AM</option> -->
+    <!-- <option value="7-8">7:00 AM - 8:00 AM</option> -->
+    <!-- <option value="8-9">8:00 AM - 9:00 AM</option>
+    <option value="9-10">9:00 AM - 10:00 AM</option>
+    <option value="10-11">10:00 AM - 11:00 AM</option>
+    <option value="11-12">11:00 AM - 12:00 PM</option>
+    <option value="12-13">12:00 PM - 1:00 PM</option> -->
+    <!-- <option value="13-14">1:00 PM - 2:00 PM</option> -->
+    <!-- <option value="14-15">2:00 PM - 3:00 PM</option> -->
+    <!-- <option value="15-16">3:00 PM - 4:00 PM</option> -->
+    <!-- <option value="16-17">4:00 PM - 5:00 PM</option>
+    <option value="17-18">5:00 PM - 6:00 PM</option>
+    <option value="18-19">6:00 PM - 7:00 PM</option>
+    <option value="19-20">7:00 PM - 8:00 PM</option>
+    <option value="20-21">8:00 PM - 9:00 PM</option>
+    <option value="21-22">9:00 PM - 10:00 PM</option>
+    <option value="22-23">10:00 PM - 11:00 PM</option>
+    <option value="23-24">11:00 PM - 12:00 AM</option>
+</select> -->
+
+
+
+
+
+
+
